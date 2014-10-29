@@ -1,0 +1,20 @@
+{% extends "../base.html" %}
+{% block title %}ChocoBlog{% end %}
+{% block header %}
+  {% module navigation(select=u'图片', current_user=current_user) %}
+{% end %}
+{% block body %}
+  <br>
+  {% for image in last_upload %}
+    <p>
+      <a href="{{ image.get_url() }}">{{ image.name }}</a> 上传成功 <small>{{ locale.format_date(image.upload_time) }}</small>
+    </p>
+  {% end %}
+  <form class="form-inline" action="/image/create" method="post" enctype="multipart/form-data">
+    <label>上传图片</label>
+    <div id="input_area">
+      <input type="file" name="upload">
+    </div>
+    <button type="submit" class="btn">提交</button>
+  </form>
+{% end %}

@@ -1,0 +1,21 @@
+{% extends "page_div_base.html" %}
+{% block page_body %}
+  {% for item in item_list %}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="thumbnail">
+        <a href="{{ item.get_url() }}">
+          <img alt="300x200" src="{{ item.get_thumbnail_url() }}">
+        </a>
+        <div class="caption">
+          <div style="text-align: center;"><strong>{{ item.name }}</strong></div>
+          <div style="text-align: center;">
+            <small>
+              <a href="/user/view?id={{ item.uploader.id }}">{{ item.uploader.name }}</a>
+              {{ locale.format_date(item.upload_time) }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% end %}
+{% end %}

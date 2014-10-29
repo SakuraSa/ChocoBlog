@@ -1,0 +1,31 @@
+{% extends "page_div_base.html" %}
+{% block page_body %}
+  {% for item in item_list %}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="thumbnail">
+        <a href="/post/view?id={{ item.id }}">
+          <img alt="300x200" src="{{ item.image.get_thumbnail_url() }}">
+        </a>
+        <div class="caption">
+          <center>
+            <h3><a href="/post/view?id={{ item.id }}">{{ item.title }}</a></h3>
+            {% if current_user %}
+              <small>
+                {% if item.get_can_edit(current_user) %}
+                  <a href="/post/edit?id={{ item.id }}">编辑</a>
+                {% end %}
+                {% if item.get_can_edit(current_user) %}
+                  <a href="/post/delete?id={{ item.id }}">删除</a>
+                {% end %}
+              </small>
+            {% end %}
+            <small>
+              <a href="/user/view?id={{ item.author_id }}">{{ item.author.name }}</a>
+              {{ locale.format_date(item.post_time) }}
+            </small>
+          </center>
+        </div>
+      </div>
+    </div>
+  {% end %}
+{% end %}

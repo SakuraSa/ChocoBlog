@@ -1,0 +1,51 @@
+{% extends "../base.html" %}
+{% block title %}ChocoBlog {{ post.title }}{% end %}
+{% block header %}
+  {% module navigation(select=u'文章', current_user=current_user) %}
+{% end %}
+{% block body %}
+<br>
+<div class="span12">
+  <h3>{{ post.title }}</h3>
+  <small>
+    <a href="/post/view?id={{ post.author_id }}">{{ post.author.name }}</a>
+    {{ locale.format_date(post.post_time) }}
+  </small><br>
+  {% if current_user %}
+    <small>
+      {% if post.get_can_edit(current_user) %}
+        <a href="/post/edit?id={{ post.id }}">编辑</a>
+      {% end %}
+      {% if post.get_can_edit(current_user) %}
+        <a href="/post/delete?id={{ post.id }}">删除</a>
+      {% end %}
+    </small>
+  {% end %}
+  <br>
+
+  <img alt="300x200" class="img-responsive img-rounded" src="{{ post.image.get_url() }}">
+  <br>
+  {% module markdown(post.content) %}
+</div>
+<div class="span12">
+<h3>回复:</h3>
+{% module page_div(sqliter=sqliter, page_index=page_index, page_size=page_size, current_user=current_user, nav_size=nav_size, template='ui/page_div_comment.html') %}
+</div>
+<div>
+<form class="form" action="/comment/create" method="post">
+  <fieldset>
+    <legend>回复文章</legend>
+    <input type="hidden" name="post_id" value="{{ post.id }}">
+{% if current_user %}
+    <div class="form-group">
+      <label for="content_input">内容</label>
+      <textarea name="content" class="form-control" id="content_input" placeholder="请输入内容" rows="10" style="width: 100%;" maxlength="140"></textarea>
+    </div>
+    <button type="submit" class="btn">提交</button>
+{% else %}
+  <p>回复文章需要<a href="/login?next=/post/view?id={{ post.id }}">登陆</a></p>
+{% end %}
+  </fieldset>
+</form>
+</div>
+{% end %}

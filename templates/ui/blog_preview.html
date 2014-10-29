@@ -1,0 +1,26 @@
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+  <div class="thumbnail">
+    <a href="/post/view?id={{ post.id }}">
+      <img alt="300x200" src="{{ post.image.get_thumbnail_url() }}">
+    </a>
+    <div class="caption">
+      <div style="text-align: center;"><h3><a href="/post/view?id={{ post.id }}">{{ post.title }}</a></h3></div>
+      <div style="text-align: center;">
+        <small>
+          <a href="/user/view?id={{ post.author_id }}">{{ post.author.name }}</a>
+          {{ locale.format_date(post.post_time) }}
+        </small>
+        {% if current_user %}
+          <small>
+            {% if post.get_can_edit(current_user) %}
+              <a href="/post/edit?id={{ post.id }}">编辑</a>
+            {% end %}
+            {% if post.get_can_edit(current_user) %}
+              <a href="/post/delete?id={{ post.id }}">删除</a>
+            {% end %}
+          </small>
+        {% end %}
+      </div>
+    </div>
+  </div>
+</div>

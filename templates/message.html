@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}ChocoBlog {{ msg.title }}{% end %}
+{% block header %}{% end %}
+{% block body %}
+<div class="alert alert-{{ msg.type }}" role="alert">
+  <center>
+  <h3>{{ msg.title }}</h3>
+  <p><strong>{{ msg.msg }}</strong></p>
+  <p>
+    您的页面将在<strong id="count_down">{{ msg.count_down }}</strong>秒后跳转到<strong><a href="{{ msg.next }}">{{ msg.next }}</a></strong>
+  </p>
+  </center>
+</div>
+{% block footer_script %}
+<script>
+  (function(){
+    var sec = {{ msg.count_down }};
+    function count_down(){
+      document.getElementById('count_down').innerHTML = sec.toString();
+      if(sec > 0){
+        sec --;
+        setTimeout(count_down, 1000);
+      }else{
+        window.location.href = "{{ msg.next }}";
+      }
+    }
+    count_down();
+  })();
+</script>
+{% end %}
+{% end %}

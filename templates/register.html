@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}ChocoBlog 注册{% end %}
+{% block header %}{% end %}
+{% block body %}
+<div class="container">
+  <form class="form-signin" role="form" action="/register" method="post" style="max-width: 330px;padding: 15px;margin: 0 auto;">
+    <h2 class="form-signin-heading">注册</h2>
+    <p class="text-warning" id="info"></p>
+    <input type="hidden" name="next" value="{{ next }}">
+    <div style="display: none">
+      <input type="hidden" name="uuid" value="{{ ver_code.uuid }}">
+      <img id="ver_image" src="{{ ver_code.image }}">
+    </div>
+    <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+    <input type="password" name="password" class="form-control" placeholder="Password" required>
+    <input type="password" name="password_cfm" class="form-control" placeholder="PasswordConfirm" required>
+    <input type="text" id="ver_code" name="ver_code" class="form-control" placeholder="Ver Code" maxlength="{{ len(ver_code.code) }}" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" id="form_button">提交</button>
+  </form>
+</div> <!-- /container -->
+{% end %}
+{% block footer_script %}
+<script type="text/javascript">
+window.onload = function(){
+  var ver_code_input = $("input#ver_code");
+  var image = $("img#ver_image");
+  var container = $("<div></div>");
+  container.append(image);
+  ver_code_input.popover({
+    trigger:"manual",
+    title:"验证码",
+    html:true,
+    placement:"top",
+    content:container.html()
+  });
+  ver_code_input.focus(function () {
+    ver_code_input.popover('show');
+  });
+  ver_code_input.blur(function () {
+    ver_code_input.popover('hide');
+  });
+  var inputer_username = $("[name='username']");
+  var send_msg = function(msg){
+    alert(msg + "已经存在了");
+  };
+
+  inputer_username.blur(function(){
+    if(inputer_username.val().length <= 0){
+      return;
+    }
+    $.getJSON('/user/check_username?username=' + inputer_username.val(), function(result){
+      if(!result || result.data){
+        send_msg(inputer_username.val() + "已经存在了");
+        inputer_username.focus();
+      }
+    });
+  });
+};
+</script>
+{% end %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}ChocoBlog 登陆{% end %}
+{% block header %}{% end %}
+{% block body %}
+<div class="container">
+  <form class="form-signin" role="form" action="/login" method="post" style="max-width: 330px;padding: 15px;margin: 0 auto;">
+    <h2 class="form-signin-heading">登陆</h2>
+    <input type="hidden" name="next" value="{{ next }}">
+    <div style="display: none">
+      <input type="hidden" name="uuid" value="{{ ver_code.uuid }}">
+      <img id="ver_image" src="{{ ver_code.image }}">
+    </div>
+    <input type="text" name="username" class="form-control" placeholder="Username" value="{{ username }}" required {% if not username%}autofocus{% end %}>
+    <input type="password" name="password" class="form-control" placeholder="Password" required {% if username%}autofocus{% end %}>
+    <input type="text" id="ver_code" name="ver_code" class="form-control" placeholder="Ver Code" maxlength="{{ len(ver_code.code) }}" required>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="remember_me" checked> 记住我
+      </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+  </form>
+</div> <!-- /container -->
+{% end %}
+{% block footer_script %}
+<script type="text/javascript">
+window.onload = function(){
+  var ver_code_input = $("input#ver_code");
+  var image = $("img#ver_image");
+  var container = $("<div></div>");
+  container.append(image);
+  ver_code_input.popover({
+    trigger:"manual",
+    title:"验证码",
+    html:true,
+    placement:"top",
+    content:container.html()
+  });
+  ver_code_input.focus(function () {
+    ver_code_input.popover('show');
+  });
+  ver_code_input.blur(function () {
+    ver_code_input.popover('hide');
+  });
+};
+</script>
+{% end %}

@@ -1,0 +1,9 @@
+{% extends "../base.html" %}
+{% block title %}ChocoBlog{% end %}
+{% block header %}
+  {% module navigation(select=u'图片', current_user=current_user) %}
+{% end %}
+{% block body %}
+  <br>
+  {% module page_div(sqliter=sqliter, page_index=page_index, page_size=page_size, current_user=current_user, nav_size=nav_size, template='ui/page_div_image.html') %}
+{% end %}

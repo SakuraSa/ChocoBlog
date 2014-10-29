@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}ChocoBlog{% end %}
+{% block header %}
+  {% module navigation(select=u'聊天室', current_user=current_user) %}
+{% end %}
+{% block body %}
+  <br>
+  {% module chat_room(current_user) %}
+{% end %}

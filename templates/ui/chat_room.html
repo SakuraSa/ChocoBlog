@@ -1,0 +1,19 @@
+<div class="chat-room">
+  <table class="table table-hover table-striped table-bordered" id="chat-logs">
+    <tr id="chat-sample">
+      <td id="chat-header" class="col-md-1"><strong>发言者</strong></td>
+      <td id="chat-content">
+        <strong>发言内容</strong>
+      </td>
+    </tr>
+  </table>
+  <div id="chat-input">
+  {% if current_user %}
+    <label for="say">发言</label><textarea class="form-control" rows="3" id="say"></textarea>
+    <button type="button" class="btn btn-default" id="btn-say">发送</button>
+    <label for="checkbox-enter"><input type="checkbox" id="checkbox-enter" checked>Ctrl+Enter发言</label>
+  {% else %}
+    <p>需要<strong><a href="/login">登陆</a></strong>才能发言</p>
+  {% end %}
+  </div>
+</div>

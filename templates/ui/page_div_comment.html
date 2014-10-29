@@ -1,0 +1,23 @@
+{% extends "page_div_base.html" %}
+{% block page_body %}
+<table class="table table-hover table-striped table-bordered">
+  <thead>
+    <tr>
+      <td class="col-md-1">序号</td>
+      <td class="col-md-1">作者</td>
+      <td class="col-md-2">时间</td>
+      <td class="col-md-8">内容</td>
+    </tr>
+  </thead>
+  <tbody>
+  {% for index, item in enumerate(item_list) %}
+  <tr>
+    <td>{{ index + page_index * page_size + 1 }}</td>
+    <td><small><a href="/user/view?id={{ item.author_id }}">{{ item.author.name }}</a></small></td>
+    <td><small>{{ locale.format_date(item.post_time) }}</small></td>
+    <td><div class="markdown">{% module markdown(item.content) %}</div></td>
+  </tr>
+  {% end %}
+  </tbody>
+</table>
+{% end %}

@@ -1,0 +1,32 @@
+<div id="page-body" class="row">
+{% block page_body %}
+  {% for item in item_list %}
+    <p>{{ str(item) }}</p>
+  {% end %}
+{% end %}
+</div>
+<div id="page-nav" class="row">
+{% block page_nav %}
+<center>
+<ul class="pagination">
+  {% if page_index > 0 %}
+    <li><a href="?page_index={{ page_index - 1 }}&page_size={{ page_size }}&nav_size={{ nav_size }}">&laquo;</a></li>
+  {% else %}
+    <li class="disabled"><a href="?page_index={{ page_index - 1 }}&page_size={{ page_size }}&nav_size={{ nav_size }}">&laquo;</a></li>
+  {% end %}
+  {% for i in range(max(0, page_index - nav_size / 2), min(page_count - 1, page_index + nav_size / 2 + 1)) %}
+    {% if i == page_index %}
+      <li class="active"><a href="?page_index={{ i }}&page_size={{ page_size }}&nav_size={{ nav_size }}">{{ i + 1 }}</a></li>
+    {% else %}
+      <li><a href="?page_index={{ i }}&page_size={{ page_size }}&nav_size={{ nav_size }}">{{ i + 1 }}</a></li>
+    {% end %}
+  {% end %}
+  {% if page_index < page_count - 1 %}
+    <li><a href="?page_index={{ page_index + 1 }}&page_size={{ page_size }}&nav_size={{ nav_size }}">&raquo;</a></li>
+  {% else %}
+    <li class="disabled"><a href="?page_index={{ page_index + 1 }}&page_size={{ page_size }}&nav_size={{ nav_size }}">&raquo;</a></li>
+  {% end %}
+</ul>
+</center>
+{% end %}
+</div>

@@ -1,0 +1,48 @@
+{% extends "../base.html" %}
+{% block title %}ChocoBlog user.name{% end %}
+{% block header %}
+  {% module navigation(select=u'用户', current_user=current_user) %}
+{% end %}
+{% block body %}
+<br>
+<div class="span12">
+  <h3>{{ user.name }}</h3>
+  <small>
+    角色:{{ user.role.name }}
+  </small><br>
+  <small>
+    注册于{{ locale.format_date(user.register_time) }}
+  </small><br>
+  {% if user.get_can_edit(current_user) %}
+  <form class="form-inline" action="/user/change_password" method="post">
+    <input type="hidden" name="user_id" value="{{ user.id }}">
+    <center>
+    <fieldset>
+      <legend>变更密码</legend>
+      <label for="opw">原有密码</label><input type="text" name="old_password" id="opw" maxlength="64" onblur="checkUser(this)" />
+      <span class="help-block">填写您的原有的密码。</span>
+      <label for="pw">新的密码</label><input type="password" name="password" id="pw" required="true" maxlength="64" onblur="checkPass(this)" />
+      <span class="help-block">填写您的密码。</span>
+      <label for="pwc">确认密码</label><input type="password" name="password_cfm" id="pwc"  required="true" maxlength="64" onblur="checkCFM(this)" />
+      <span class="help-block">确认您的密码。</span>
+      <button type="submit" class="btn" id="submit">提交</button>
+    </fieldset>
+    </center>
+  </form>
+  <script>
+function checkUser(input)
+{
+}
+function checkPass(input)
+{
+}
+function checkCFM(input)
+{
+if($("input#pw").val() != $("input#pwc").val()){
+  alert("您两次密码输入不同");
+}
+}
+  </script>
+  {% end %}
+</div>
+{% end %}
