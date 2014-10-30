@@ -162,7 +162,8 @@ def init():
     session = Session()
     if session.query(Role).count() == 0:
         session.add(Role(name=u'管理员', id=0))
-        session.add(Role(name=u'会员', id=1))
+        session.add(Role(name=u'作者', id=1))
+        session.add(Role(name=u'会员', id=2))
         session.add(Image(name=u'choco.jpg',
                           path='static/image/choco.jpg',
                           thumbnail_path='static/image/choco.jpg',

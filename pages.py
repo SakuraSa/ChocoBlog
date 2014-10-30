@@ -287,7 +287,7 @@ class PageRegister(PageBase):
         ver_code_uuid = self.get_body_argument('uuid')
         ver_code = self.get_body_argument('ver_code')
         if not verification_code_manager.check(ver_code_uuid, ver_code):
-            raise MessageInterrupt('/login', u'验证码不正确', 'warning', u'注册失败')
+            raise MessageInterrupt('/register', u'验证码不正确', 'warning', u'注册失败')
         if len(password) < 6:
             raise MessageInterrupt('/register', u'密码小于6位', 'warning', u'注册失败')
         if password != password_cfm:
@@ -295,7 +295,7 @@ class PageRegister(PageBase):
         if self.session.query(models.User).filter(models.User.name == username).first():
             raise MessageInterrupt('/register', u'用户名已经存在', 'warning', u'注册失败')
 
-        user = models.User(name=username, pwd=password, role_id=1)
+        user = models.User(name=username, pwd=password, role_id=2)
         self.session.add(user)
         self.session.commit()
 
@@ -329,14 +329,14 @@ class PagePostView(PageBase):
 class PagePostCreate(PageBase):
     @tornado.web.authenticated
     def get(self):
-        if not self.current_user or self.current_user.role_id != 0:
-            raise MessageInterrupt('/', u'只有管理员测能发布文章', 'danger', u'拒绝访问')
+        if not self.current_user or not self.current_user.role_id in (0, 1):
+            raise MessageInterrupt('/', u'您没有权限发布文章', 'danger', u'拒绝访问')
         self.render('post/create.html')
 
     @tornado.web.authenticated
     def post(self):
-        if not self.current_user or self.current_user.role_id != 0:
-            raise MessageInterrupt('/', u'只有管理员测能发布文章', 'danger', u'拒绝访问')
+        if not self.current_user or not self.current_user.role_id in (0, 1):
+            raise MessageInterrupt('/', u'您没有权限布文章', 'danger', u'拒绝访问')
         title = self.get_argument('title')
         content = self.get_argument('content')
         post = models.Post()
@@ -363,7 +363,7 @@ class PagePostEdit(PageBase):
     def get(self):
         post = get_model_by_id(self, models.Post)
         if not post.get_can_edit(self.current_user):
-            raise MessageInterrupt('/', u'您没有权限做此操作', 'danger', u'拒绝访问')
+            raise MessageInterrupt('/', u'您没有权限编辑此文章', 'danger', u'拒绝访问')
         self.render('post/edit.html', post=post)
 
     @tornado.web.authenticated
@@ -371,7 +371,7 @@ class PagePostEdit(PageBase):
     def post(self):
         post = get_model_by_id(self, models.Post)
         if not post.get_can_edit(self.current_user):
-            raise MessageInterrupt('/', u'您没有权限做此操作', 'danger', u'拒绝访问')
+            raise MessageInterrupt('/', u'您没有权限编辑此文章', 'danger', u'拒绝访问')
         post.author_id = self.current_user.id
         post.title = self.get_argument('title')
         post.content = self.get_argument('content')
@@ -420,14 +420,14 @@ class PageImageList(PageBase):
 class PageImageCreate(PageBase):
     @tornado.web.authenticated
     def get(self):
-        if not self.current_user or self.current_user.role_id != 0:
-            raise MessageInterrupt('/', u'只有管理员测能上传图片', 'danger', u'拒绝访问')
+        if not self.current_user or not self.current_user.role_id in (0, 1):
+            raise MessageInterrupt('/', u'您没有权限上传图片', 'danger', u'拒绝访问')
         self.render('image/create.html', last_upload=[])
 
     @tornado.web.authenticated
     def post(self):
-        if not self.current_user or self.current_user.role_id != 0:
-            raise MessageInterrupt('/', u'只有管理员测能上传图片', 'danger', u'拒绝访问')
+        if not self.current_user or not self.current_user.role_id in (0, 1):
+            raise MessageInterrupt('/', u'您没有权限上传图片', 'danger', u'拒绝访问')
         last_upload = PageImageCreate.upload(self)
         self.render('image/create.html', last_upload=last_upload)
 
@@ -486,7 +486,30 @@ class PageUserView(PageBase):
     @catch_message
     def get(self):
         user = get_model_by_id(self, models.User)
-        self.render('user/view.html', user=user)
+        if user.role_id == 0:
+            roles = self.session.query(models.Role).filter(models.Role.id == 0).order_by(models.Role.id)
+        else:
+            roles = self.session.query(models.Role).filter(models.Role.id != 0).order_by(models.Role.id)
+        self.render('user/view.html', user=user, roles=roles)
+
+
+@mapping(r'/user/update_role')
+class PageUserUpdateRole(PageBase):
+    @tornado.web.authenticated
+    @catch_message
+    def post(self):
+        user = get_model_by_id(self, models.User)
+        role_id = int(self.get_body_argument('role_id'))
+        next_url = self.get_argument('next', '/user/view?id=%s' % user.id)
+        if self.current_user.role_id != 0:
+            raise MessageInterrupt(next_url, u'只有管理员测能修改角色', 'danger', u'拒绝访问')
+        if user.role_id == 0:
+            raise MessageInterrupt(next_url, u'不能修改管理员的角色', 'danger', u'拒绝访问')
+        if role_id == 0:
+            raise MessageInterrupt(next_url, u'不能将其他角色修改成管理员', 'danger', u'拒绝访问')
+        user.role_id = role_id
+        self.session.commit()
+        raise MessageInterrupt(next_url, u'"%s"的角色修改成功' % user.name, 'success', u'修改成功', count_down=3)
 
 
 @mapping(r'/user/change_password')

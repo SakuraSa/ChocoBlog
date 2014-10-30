@@ -10,7 +10,7 @@
   <li class="dropdown pull-right">
     <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ current_user.name }}<b class="caret"></b></a>
     <ul class="dropdown-menu">
-      {% if current_user.role_id == 0 %}
+      {% if current_user.role_id in (0, 1) %}
       <li><a href="/post/create">新建帖子</a></li>
       <li><a href="/image/create">上传图片</a></li>
       {% end %}

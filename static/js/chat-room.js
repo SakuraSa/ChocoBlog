@@ -67,15 +67,15 @@
     var reconnection_delay = 3;
     var on_connection_error = function(respones, error) {
         if(this.url.substr(0, 25) == "chat/update?method=listen"){
-            add_message("系统", get_now_time_string(), '<p class="text-danger">' + "通讯错误, " + reconnection_delay + "s后尝试重新连接" + '</p>');
+            //add_message("系统", get_now_time_string(), '<p class="text-danger">' + "通讯错误, " + reconnection_delay + "s后尝试重新连接" + '</p>');
             is_reconnection = true;
             setTimeout(function(){
-                add_message("系统", get_now_time_string(), '<p class="text-info">' + "尝试重新连接中..." + '</p>');
+                //add_message("系统", get_now_time_string(), '<p class="text-info">' + "尝试重新连接中..." + '</p>');
                 listen_room();
-                setTimeout(function(){
+/*                setTimeout(function(){
                     if(is_reconnection)
                         add_message("系统", get_now_time_string(), '<p class="text-success">' + "重新连接成功" + '</p>');
-                }, 1000);
+                }, 1000);*/
             }, reconnection_delay * 1000);
         }
     };
