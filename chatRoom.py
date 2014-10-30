@@ -19,7 +19,7 @@ class ChatRoom(object):
         self.client_list = list()
 
         message = u"""
-![Choco](/static/upload/choco.jpg)
+![Choco](/static/image/choco.jpg)
 欢迎使用ChocoBlog
 ==================
 聊天可以使用```Markdown```语法

@@ -164,8 +164,8 @@ def init():
         session.add(Role(name=u'管理员', id=0))
         session.add(Role(name=u'会员', id=1))
         session.add(Image(name=u'choco.jpg',
-                          path='static/upload/choco.jpg',
-                          thumbnail_path='static/upload/choco.jpg',
+                          path='static/image/choco.jpg',
+                          thumbnail_path='static/image/choco.jpg',
                           uploader_id=0, id=0))
         session.add(User(name=configs.admin_username, pwd=configs.admin_password, role_id=0, id=0))
         post = Post()
