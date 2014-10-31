@@ -17,7 +17,7 @@ engine = create_engine('sqlite:///db.db', echo=False)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
-IMAGE_EXT = {'.jpg', '.png'}
+IMAGE_EXT = {'.jpg', '.jpeg', '.gif', '.png'}
 
 
 class User(Base):

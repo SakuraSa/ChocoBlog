@@ -444,7 +444,8 @@ class PageImageCreate(PageBase):
                     upload_name = os.path.split(meta['filename'])[-1]
                     ext = os.path.splitext(upload_name)[-1]
                     if not ext.lower() in models.IMAGE_EXT:
-                        raise MessageInterrupt(referer, u'图片格式必须为 jpg 或 png', 'warning', u'格式错误')
+                        raise MessageInterrupt(referer, u'图片格式必须为 %s' % u' 或 '.join(models.IMAGE_EXT),
+                                               'warning', u'格式错误')
                     if len(meta['body']) > 1024 * 1024 * 2:
                         raise MessageInterrupt(referer, u'图片尺寸必须小于2Mb', 'warning', u'尺寸错误')
                     file_name = str(int(time.time())) + hex(id(self)) + ext
