@@ -388,6 +388,7 @@ class PagePostDelete(PageBase):
         post = get_model_by_id(self, models.Post)
         if not post.get_can_delete(self.current_user):
             raise MessageInterrupt('/', u'您没有权限做此操作', 'danger', u'拒绝访问')
+        self.session.query(models.Comment).filter(models.Comment.post_id == post.id).delete()
         self.session.delete(post)
         self.redirect(self.get_argument('next', '/post/list'))
 
