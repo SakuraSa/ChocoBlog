@@ -450,6 +450,8 @@ class PageImageCreate(PageBase):
                         raise MessageInterrupt(referer, u'图片尺寸必须小于2Mb', 'warning', u'尺寸错误')
                     file_name = str(int(time.time())) + hex(id(self)) + ext
                     upload_path = 'static/upload/'
+                    if not os.path.exists(upload_path):
+                        os.makedirs(upload_path)
                     file_path = os.path.join(upload_path, file_name)
                     image = models.Image(name=meta['filename'],
                                          path=file_path, thumbnail_path=None, uploader_id=self.current_user.id)
@@ -469,6 +471,8 @@ class PageImageCreate(PageBase):
                         image_obj.thumbnail(size, Image.ANTIALIAS)
                         file_name = "thumbnail" + str(int(time.time())) + hex(id(self)) + ext
                         upload_path = 'static/upload/thumbnail/'
+                        if not os.path.exists(upload_path):
+                            os.makedirs(upload_path)
                         file_path = os.path.join(upload_path, file_name)
                         image_obj.save(file_path)
                         image.thumbnail_path = file_path
