@@ -15,7 +15,8 @@
                   <a href="/post/edit?id={{ item.id }}">编辑</a>
                 {% end %}
                 {% if item.get_can_edit(current_user) %}
-                  <a href="/post/delete?id={{ item.id }}">删除</a>
+                  <a href="#" data-toggle="modal" data-target="#modal{{ item.id }}">删除</a>
+                  {% module modal_option(current_user=current_user, modal_id="modal"+str(item.id), modal_title=u"删除", modal_content=u"您确认要删除么？", modal_target="/post/delete?id="+str(item.id), modal_type="danger") %}
                 {% end %}
               </small>
             {% end %}

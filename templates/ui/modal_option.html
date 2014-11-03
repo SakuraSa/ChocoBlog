@@ -1,0 +1,11 @@
+{% extends "modal.html" %}
+{% block modal_header %}
+<h4 class="modal-title" id="myModalLabel">{{ modal_title }}</h4>
+{% end %}
+{% block modal_body %}
+{% raw modal_content %}
+{% end %}
+{% block modal_footer %}
+<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+<a type="button" class="btn btn-{{ modal_type }}" href="{{ modal_target }}">确认</a>
+{% end %}

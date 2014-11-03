@@ -22,7 +22,7 @@ class Verification(object):
         self.available_time = available_time
         self.code_length = 4
         self.code_alpha = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        self.code_alike = {'O': '0', 'o': '0', 'I': '1'}
+        self.code_alike = {'O': '0', 'o': '0', 'I': '1', 'l': '1'}
         self.code_color = ((20, 15, 50), (50, 15, 20), (15, 20, 50))
         self.image_size = (100, 40)
         self.image_background_color = (200, 200, 200, 200)

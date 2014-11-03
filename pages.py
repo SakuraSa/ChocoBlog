@@ -102,6 +102,22 @@ class UIChatRoom(tornado.web.UIModule):
         return "/static/css/high-light/default.css"
 
 
+@mapping(r'modal_option')
+class UIModalOption(tornado.web.UIModule):
+    def render(self, current_user, modal_id, modal_title,
+               modal_content, modal_target, modal_type='primary', markdown=True):
+        if markdown:
+            modal_content = helper.safe_markdown(modal_content)
+        return self.render_string(
+            'ui/modal_option.html',
+            current_user=current_user,
+            modal_id=modal_id,
+            modal_title=modal_title,
+            modal_content=modal_content,
+            modal_target=modal_target,
+            modal_type=modal_type)
+
+
 class MessageInterrupt(Exception):
     TITLE_DICT = {'info': u'信息', 'success': u'成功', 'warning': u'注意', 'danger': u'警告'}
     TITLE_DEFAULT = u'未知'
@@ -390,6 +406,7 @@ class PagePostDelete(PageBase):
             raise MessageInterrupt('/', u'您没有权限做此操作', 'danger', u'拒绝访问')
         self.session.query(models.Comment).filter(models.Comment.post_id == post.id).delete()
         self.session.delete(post)
+        self.session.commit()
         self.redirect(self.get_argument('next', '/post/list'))
 
 
@@ -599,16 +616,3 @@ def create_app(gzip=True):
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         cookie_secret=configs.cookie_secret
     )
-
-
-if __name__ == '__main__':
-    import os
-
-    if not os.path.exists('db.db'):
-        print 'db.db not exists, initializing...'
-        models.init()
-        print 'ok'
-
-    app = create_app()
-    app.listen(configs.service_ip, configs.service_port)
-    tornado.ioloop.IOLoop.instance().start()
