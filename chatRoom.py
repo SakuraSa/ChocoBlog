@@ -89,6 +89,8 @@ class ChatRoom(object):
                     lines.append(u"%4d. [%s](/user/view?id=%d) %s" % (counter, user.name, user.id, user.role.name))
                     id_set.add(user.id)
             self.send_delay_message(u"\n\r".join(lines), u"系统")
+        elif message == "/clear":
+            self.pair_cache.clear()
         else:
             return False
         return True
