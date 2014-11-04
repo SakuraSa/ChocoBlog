@@ -1,0 +1,23 @@
+{% extends "page_div_base.html" %}
+{% block page_body %}
+<table class="table table-hover table-striped table-bordered">
+  <thead>
+    <tr>
+      <td class="col-md-1">序号</td>
+      <td class="col-md-6">名称</td>
+      <td class="col-md-3">注册时间</td>
+      <td class="col-md-2">权限</td>
+    </tr>
+  </thead>
+  <tbody>
+  {% for index, item in enumerate(item_list) %}
+  <tr>
+    <td>{{ index + page_index * page_size + 1 }}</td>
+    <td><strong><a href="/user/view?id={{ item.id }}">{{ item.name }}</a></strong></td>
+    <td><small>{{ locale.format_date(item.register_time) }}</small></td>
+    <td><p>{{ item.role.name }}</p></td>
+  </tr>
+  {% end %}
+  </tbody>
+</table>
+{% end %}

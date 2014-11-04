@@ -1,4 +1,4 @@
-<div id="page-body" class="row">
+<div id="page-body" style="width: 100%;">
 {% block page_body %}
   {% for item in item_list %}
     <p>{{ str(item) }}</p>
@@ -7,7 +7,7 @@
 </div>
 <div id="page-nav" class="row">
 {% block page_nav %}
-<center>
+<div style="text-align: center;">
 <ul class="pagination">
   {% if page_index > 0 %}
     <li><a href="?page_index={{ page_index - 1 }}&page_size={{ page_size }}&nav_size={{ nav_size }}">&laquo;</a></li>
@@ -27,6 +27,6 @@
     <li class="disabled"><a href="?page_index={{ page_index + 1 }}&page_size={{ page_size }}&nav_size={{ nav_size }}">&raquo;</a></li>
   {% end %}
 </ul>
-</center>
+</div>
 {% end %}
 </div>

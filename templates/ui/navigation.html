@@ -13,8 +13,13 @@
       {% if current_user.role_id in (0, 1) %}
       <li><a href="/post/create">新建帖子</a></li>
       <li><a href="/image/create">上传图片</a></li>
+      <li class="divider"></li>
       {% end %}
-      <li><a href="/user/view?id={{ current_user.id }}">信息</a></li>
+      <li><a href="/user/view?id={{ current_user.id }}">个人信息</a></li>
+      {% if current_user.role_id == 0 %}
+      <li><a href="/user/list">用户列表</a></li>
+      {% end %}
+      <li class="divider"></li>
       <li><a href="/logout">注销</a></li>
     </ul>
   </li>

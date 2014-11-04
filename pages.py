@@ -516,6 +516,14 @@ class PageUserView(PageBase):
         self.render('user/view.html', user=user, roles=roles)
 
 
+@mapping(r'/user/list')
+class PageUserList(PageBase):
+    @catch_message
+    def get(self):
+        sqliter = self.session.query(models.User).order_by(models.User.id)
+        render_list_page_template(self, template='user/list.html', sqliter=sqliter)
+
+
 @mapping(r'/user/update_role')
 class PageUserUpdateRole(PageBase):
     @tornado.web.authenticated
