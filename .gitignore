@@ -59,4 +59,7 @@ target/
 
 # LIST_TODO
 TODO.txt
+
+# Instance data
 db.db
+setting.conf
