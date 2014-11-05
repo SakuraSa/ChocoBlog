@@ -447,7 +447,8 @@ class PageImageCreate(PageBase):
         if not self.current_user or not self.current_user.role_id in (0, 1):
             raise MessageInterrupt('/', u'您没有权限上传图片', 'danger', u'拒绝访问')
         last_upload = PageImageCreate.upload(self)
-        self.render('image/create.html', last_upload=last_upload)
+        if last_upload:
+            self.render('image/create.html', last_upload=last_upload)
 
     @staticmethod
     @catch_message
@@ -463,8 +464,8 @@ class PageImageCreate(PageBase):
                     if not ext.lower() in models.IMAGE_EXT:
                         raise MessageInterrupt(referer, u'图片格式必须为 %s' % u' 或 '.join(models.IMAGE_EXT),
                                                'warning', u'格式错误')
-                    if len(meta['body']) > 1024 * 1024 * 2:
-                        raise MessageInterrupt(referer, u'图片尺寸必须小于2Mb', 'warning', u'尺寸错误')
+                    if len(meta['body']) > 1024 * 1024 * 20:
+                        raise MessageInterrupt(referer, u'图片尺寸必须小于20Mb', 'warning', u'尺寸错误')
                     file_name = str(int(time.time())) + hex(id(self)) + ext
                     upload_path = 'static/upload/'
                     if not os.path.exists(upload_path):
