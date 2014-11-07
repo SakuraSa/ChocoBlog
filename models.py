@@ -96,10 +96,10 @@ class Image(Base):
             return"<%s[%s]: %s>" % (type(self).__name__, self.id, self.upload_path)
 
     def get_url(self):
-        return '/' + self.upload_path
+        return self.upload_path
 
     def get_thumbnail_url(self):
-        return '/' + self.thumbnail_path
+        return self.thumbnail_path
 
 
 class Post(Base):
@@ -165,8 +165,8 @@ def init():
         session.add(Role(name=u'作者', id=1))
         session.add(Role(name=u'会员', id=2))
         session.add(Image(name=u'choco.jpg',
-                          path='static/image/choco.jpg',
-                          thumbnail_path='static/image/choco.jpg',
+                          path='/static/image/choco.jpg',
+                          thumbnail_path='/static/image/choco.jpg',
                           uploader_id=0, id=0))
         session.add(User(name=configs.admin_username, pwd=configs.admin_password, role_id=0, id=0))
         post = Post()

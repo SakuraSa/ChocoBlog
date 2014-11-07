@@ -485,7 +485,9 @@ class PageImageCreate(PageBase):
                         do_resize = True
                     if do_resize:
                         image_obj.thumbnail(size, Image.ANTIALIAS)
-                        image.thumbnail_path = upload_handler.save(stream.getvalue(), ext)
+                        stream = StringIO()
+                        image_obj.save(stream, "png")
+                        image.thumbnail_path = upload_handler.save(stream.getvalue(), ".png")
                     else:
                         image.thumbnail_path = file_path
                     self.session.add(image)

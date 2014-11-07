@@ -6,6 +6,9 @@ __author__ = 'Rnd495'
 import os
 import time
 
+from oss import oss_api
+from oss import oss_xml_handler
+
 uploadHandlerDict = {}
 
 
@@ -54,4 +57,31 @@ class UploadHandlerFile(UploadHandler):
             file_full_name = os.path.join(file_path, file_name)
         with open(file_full_name, 'wb') as file_handle:
             file_handle.write(buf)
-        return os.path.join(self.upload_path, file_name)
+        return "/"  + os.path.join(self.upload_path, file_name)
+
+
+@register("ali_oss")
+class UploadHandlerAliOSS(UploadHandler):
+    def __init__(self, host, access_id, secret_access_key, bucket):
+        UploadHandler.__init__(self)
+        self.host = host
+        self.access_id = access_id
+        self.secret_access_key = secret_access_key
+        self.bucket = bucket
+        self.oss = oss_api.OssAPI(host + ".aliyuncs.com", access_id, secret_access_key, bucket)
+
+    def save(self, buf, ext):
+        ext = ext.lower()
+        content_type = "application/octet-stream"
+        if ext == ".jpg" or ext == ".jpeg":
+            content_type = "image/jpeg"
+        elif ext == ".gif":
+            content_type = "image/gif"
+        elif ext == ".png":
+            content_type = "image/png"
+        file_name = "%x_%x%s" % (int(time.time()), id(buf), ext)
+        headers = {}
+        res = self.oss.put_object_from_string(self.bucket, file_name, buf, content_type, headers)
+        if (res.status / 100) != 2:
+            raise IOError("IOError: put object failed with AliOSS.")
+        return "http://%s.%s.aliyuncs.com/%s" % (self.bucket, self.host, file_name)

@@ -62,4 +62,4 @@ TODO.txt
 
 # Instance data
 db.db
-setting.conf
+user_setting.py
