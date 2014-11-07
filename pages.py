@@ -18,6 +18,9 @@ import chatRoom
 import models
 import sessionStorage
 import verification
+import uploadHandler
+
+from cStringIO import StringIO
 
 
 Image = verification.Image
@@ -27,6 +30,7 @@ session = models.Session()
 storage = sessionStorage.SessionStoragePool()
 chat_room = chatRoom.ChatRoom(cache_size=10)
 verification_code_manager = verification.Verification()
+upload_handler = uploadHandler.get_upload_handler(configs.upload_handler_name)(**configs.upload_handler_param)
 
 
 def mapping(mapping_path):
@@ -40,8 +44,7 @@ def mapping(mapping_path):
                 raise KeyError("KeyError: module '%s' is already registered." % mapping_path)
             return module_dict.setdefault(mapping_path, target)
         else:
-            raise TypeError("TypeError: unexcepted type '%s' registered." % repr(target))
-
+            raise TypeError("TypeError: unknown type '%s' registered." % repr(target))
     return wrapper
 
 
@@ -466,16 +469,11 @@ class PageImageCreate(PageBase):
                                                'warning', u'格式错误')
                     if len(meta['body']) > 1024 * 1024 * 20:
                         raise MessageInterrupt(referer, u'图片尺寸必须小于20Mb', 'warning', u'尺寸错误')
-                    file_name = str(int(time.time())) + hex(id(self)) + ext
-                    upload_path = 'static/upload/'
-                    if not os.path.exists(upload_path):
-                        os.makedirs(upload_path)
-                    file_path = os.path.join(upload_path, file_name)
+                    file_path = upload_handler.save(meta['body'], ext)
                     image = models.Image(name=meta['filename'],
                                          path=file_path, thumbnail_path=None, uploader_id=self.current_user.id)
-                    with open(file_path, 'wb') as file_handle:
-                        file_handle.write(meta['body'])
-                    image_obj = Image.open(file_path)
+                    stream = StringIO(meta['body'])
+                    image_obj = Image.open(stream)
                     size = image_obj.size
                     do_resize = False
                     max_size = (300, 200)
@@ -487,13 +485,7 @@ class PageImageCreate(PageBase):
                         do_resize = True
                     if do_resize:
                         image_obj.thumbnail(size, Image.ANTIALIAS)
-                        file_name = "thumbnail" + str(int(time.time())) + hex(id(self)) + ext
-                        upload_path = 'static/upload/thumbnail/'
-                        if not os.path.exists(upload_path):
-                            os.makedirs(upload_path)
-                        file_path = os.path.join(upload_path, file_name)
-                        image_obj.save(file_path)
-                        image.thumbnail_path = file_path
+                        image.thumbnail_path = upload_handler.save(stream.getvalue(), ext)
                     else:
                         image.thumbnail_path = file_path
                     self.session.add(image)

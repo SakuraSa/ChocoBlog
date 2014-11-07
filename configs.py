@@ -28,6 +28,13 @@ blog_first_post_name = u"欢迎使用ChocoBlog"
 with open("markdown-help.md", "r") as file_handler:
     blog_first_post_content = file_handler.read().decode("utf-8")
 
+#upload handler
+upload_handler_name = "file"
+upload_handler_param = {
+    "root_path": os.path.split(__file__)[0],
+    "upload_path": "static/upload"
+}
+
 #nav tabs
 blog_nav_tabs = [(u'聊天室', '/'), (u'文章', '/post/list'), (u'图片', '/image/list')]
 
