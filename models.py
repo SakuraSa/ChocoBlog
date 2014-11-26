@@ -36,7 +36,7 @@ class User(Base):
         self.pwd = User.password_hash(pwd)
         self.register_time = datetime.datetime.now()
         self.role_id = role_id
-        if not id is None:
+        if id is not None:
             self.id = id
 
     def __repr__(self):
@@ -64,7 +64,7 @@ class Role(Base):
 
     def __init__(self, name, id=None):
         self.name = name
-        if not id is None:
+        if id is not None:
             self.id = id
 
     def __repr__(self):
@@ -89,7 +89,7 @@ class Image(Base):
         self.thumbnail_path = thumbnail_path
         self.uploader_id = uploader_id
         self.upload_time = datetime.datetime.now()
-        if not id is None:
+        if id is not None:
             self.id = id
 
     def __repr__(self):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 
 __author__ = 'Rnd495'
 
@@ -8,11 +8,13 @@ import hashlib
 import random
 from cStringIO import StringIO
 try:
-    #import from pillow
+    # import from pillow
     from PIL import Image, ImageDraw, ImageFont
 except ImportError:
-    #import from PIL
-    import Image, ImageDraw, ImageFont
+    # import from PIL
+    import Image
+    import ImageDraw
+    import ImageFont
 
 
 class Verification(object):
@@ -133,7 +135,3 @@ class VerificationCode(object):
                 if code.lower() == self.code.lower():
                     return True
         return False
-
-
-
-

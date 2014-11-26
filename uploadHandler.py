@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 
 __author__ = 'Rnd495'
 
@@ -7,7 +7,7 @@ import os
 import time
 
 from oss import oss_api
-from oss import oss_xml_handler
+
 
 uploadHandlerDict = {}
 

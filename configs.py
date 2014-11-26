@@ -9,7 +9,7 @@ import tornado.options
 
 #option helper
 tornado.options.define("ip", default="0.0.0.0", help="run on the given ip", type=str)
-tornado.options.define("port", default=8000, help="run on the given port", type=int)
+tornado.options.define("port", default=80, help="run on the given port", type=int)
 
 tornado.options.parse_command_line()
 

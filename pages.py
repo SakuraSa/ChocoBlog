@@ -45,6 +45,7 @@ def mapping(mapping_path):
             return module_dict.setdefault(mapping_path, target)
         else:
             raise TypeError("TypeError: unknown type '%s' registered." % repr(target))
+
     return wrapper
 
 
@@ -142,6 +143,7 @@ def catch_message(func):
             return func(self, *args, **kwargs)
         except MessageInterrupt, msg:
             self.render('message.html', msg=msg)
+
     return wrapper
 
 
@@ -166,6 +168,7 @@ def json_response(func):
                 "message": "%s:%s" % (type(ex).__name__, ex.msg),
                 "data": {}
             }))
+
     return wrapper
 
 
@@ -184,6 +187,9 @@ class PageBase(tornado.web.RequestHandler):
 
     def get_login_url(self):
         return '/login'
+
+    def data_received(self, chunk):
+        return tornado.web.RequestHandler(self, chunk)
 
 
 def get_str(request_handler, name, default=None):
@@ -338,8 +344,8 @@ class PagePostView(PageBase):
     @catch_message
     def get(self):
         post = get_model_by_id(self, models.Post)
-        sqliter = self.session.query(models.Comment)\
-            .filter(models.Comment.post_id == post.id)\
+        sqliter = self.session.query(models.Comment) \
+            .filter(models.Comment.post_id == post.id) \
             .order_by(models.Comment.post_time.desc())
         render_list_page_template(self, template='post/view.html', sqliter=sqliter, post=post)
 
@@ -348,13 +354,13 @@ class PagePostView(PageBase):
 class PagePostCreate(PageBase):
     @tornado.web.authenticated
     def get(self):
-        if not self.current_user or not self.current_user.role_id in (0, 1):
+        if not self.current_user or self.current_user.role_id not in (0, 1):
             raise MessageInterrupt('/', u'您没有权限发布文章', 'danger', u'拒绝访问')
         self.render('post/create.html')
 
     @tornado.web.authenticated
     def post(self):
-        if not self.current_user or not self.current_user.role_id in (0, 1):
+        if not self.current_user or self.current_user.role_id not in (0, 1):
             raise MessageInterrupt('/', u'您没有权限布文章', 'danger', u'拒绝访问')
         title = self.get_argument('title')
         content = self.get_argument('content')
@@ -367,7 +373,7 @@ class PagePostCreate(PageBase):
         self.session.add(post)
         self.session.commit()
 
-        #send message
+        # send message
         chat_room.send_message(
             u"%s 刚刚发布了 [%s](/post/view?id=%s)" % (self.current_user.name, post.title, post.id),
             u"系统")
@@ -441,13 +447,13 @@ class PageImageList(PageBase):
 class PageImageCreate(PageBase):
     @tornado.web.authenticated
     def get(self):
-        if not self.current_user or not self.current_user.role_id in (0, 1):
+        if not self.current_user or self.current_user.role_id not in (0, 1):
             raise MessageInterrupt('/', u'您没有权限上传图片', 'danger', u'拒绝访问')
         self.render('image/create.html', last_upload=[])
 
     @tornado.web.authenticated
     def post(self):
-        if not self.current_user or not self.current_user.role_id in (0, 1):
+        if not self.current_user or self.current_user.role_id not in (0, 1):
             raise MessageInterrupt('/', u'您没有权限上传图片', 'danger', u'拒绝访问')
         last_upload = PageImageCreate.upload(self)
         if last_upload:

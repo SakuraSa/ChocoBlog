@@ -27,7 +27,7 @@ class SessionStorage(object):
         self.manager.remove(self)
 
     def is_logged_in(self):
-        return not self.user_id is None
+        return self.user_id is not None
 
 
 class SessionStoragePool(object):

@@ -43,7 +43,7 @@ class ChatRoom(object):
 
     def send_message(self, message, name, info_type=None):
         message = helper.safe_markdown(message)
-        if not info_type is None:
+        if info_type is not None:
             message = self.system_info(message, info_type)
         self.cache_message(name, message)
         for c in self.client_list:
@@ -84,7 +84,7 @@ class ChatRoom(object):
             for pair in self.client_list:
                 client = pair["client"]
                 user = client.current_user
-                if user and not user.id in id_set:
+                if user and user.id not in id_set:
                     counter += 1
                     lines.append(u"%4d. [%s](/user/view?id=%d) %s" % (counter, user.name, user.id, user.role.name))
                     id_set.add(user.id)
